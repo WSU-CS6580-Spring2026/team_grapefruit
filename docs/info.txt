@@ -4,4 +4,12 @@ cc-est2019-alldata.pdf is the key to the 2010 census data stored in cc-est2019-a
 CC-EST2024-ALLDATA.pdf is the key to the 2020 census data stored in cc-est2024-alldata_interim.csv
 
 Master copies of the data files are stored in Dave Hulme's local GIT, as well as on his shared Google drive.
+https://drive.google.com/drive/folders/1Y_UjJug0I8i36aWwzjUgFC0fYPZaHalw?usp=sharing
+
+Current structure:
+
+(a) \data\raw contains the original four files
+(b) \data\interim contains the cut-down versions of the cc-est* files, with only the 2010 and 2020 data, respectively, as well as (for now) identical copies of the other two files (presidential election data and natality data)
+(c) \data\processed currently has nothing
+
 
