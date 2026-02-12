@@ -11,7 +11,7 @@
 **Current Phase:** Data Deep-Dive & Pipeline Construction<br>
 **Sprint 2 Goal:** Transition from raw, messy data into a clean, "analysis-ready" dataset stored in our TDSP directory structure.<br>
 **Objective:** By the end of this sprint, any teammate should be able to run a single script and reproduce our final joined dataset from scratch.<br>
-**Last Updated:** Feb 4, 2026<br>
+**Last Updated:** Feb 12, 2026<br>
 **Sprint 2 Due:** February 12, 2026<br>
 
 ## Project Board
@@ -22,21 +22,9 @@ We track all work using the GitHub Project Board:<br>
 
 | Issue | Description | Owner | Status |
 |------|-------------|-------|--------|
-| #19 | Data Cleaning | Connor | 📝 To Do |
-| #21 | The Join | Connor | 📝 To Do |
-| #22 | Verification | Jacob | 📝 To Do |
-| #23 | Check Size | Jacob | 📝 To Do |
-| #26 | Closes Keyword | Connor | 📝 To Do |
-| #14 | Code to output processed .csv | Jacob | 🚧 In Progress |
-| #17 | Exploratory Notebooks | Dave | 🚧 In Progress |
-| #25 | Column Discipline | Dave | 🚧 In Progress |
-| #15 | Code / Server modifications to import from interim | All | 🔄 Verification |
-| #16 | Build a data dictionary | Dave | 🔄 Verification |
-| #18 | Visual Evidence | Dave | 🔄 Verification |
-| #20 | Immutable Raw Data | Dave | 🔄 Verification |
-| #24 | Board Maintenance | Dave | 🔄 Verification |
-| #27 | Blocker Audit DUE 05 FEB | Dave | 🔄 Verification |
-| #28 | Updated README DUE 05 FEB | Jacob | 🔄 Verification |
+| #32 | Additional Task03 - Meeting Notes | Dave, Jacob | 🚧 In Progress |
+| #34 | Additional Task04 - Update README each Sprint | Jacob | 🚧 In Progress |
+
 
 
 
