@@ -106,7 +106,9 @@ c_cols_keep = [
     "TOT_FEMALE",
     "WA_FEMALE",
     "BA_FEMALE",
-    "H_FEMALE"
+    "H_FEMALE",
+    "NHWA_FEMALE", # Non-Hispanic White Female
+    "NHBA_FEMALE"  # Non-Hispanic Black Female
 ]
 
 def prep_census(df, name):
