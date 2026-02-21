@@ -158,9 +158,20 @@
 | H_FEMALE_2529_C          | int64     | Female population count aged 25–29 identifying as Hispanic or Latino (any race)                      |
 | H_FEMALE_3034_C          | int64     | Female population count aged 30–34 identifying as Hispanic or Latino (any race)                      |
 | H_FEMALE_3539_C          | int64     | Female population count aged 35–39 identifying as Hispanic or Latino (any race)                      |
+| NHWA_FEMALE_1519_C | int64 | Female population count aged 15–19 identifying as Non-Hispanic White alone in the county |
+| NHWA_FEMALE_2024_C | int64 | Female population count aged 20–24 identifying as Non-Hispanic White alone in the county |
+| NHWA_FEMALE_2529_C | int64 | Female population count aged 25–29 identifying as Non-Hispanic White alone in the county |
+| NHWA_FEMALE_3034_C | int64 | Female population count aged 30–34 identifying as Non-Hispanic White alone in the county |
+| NHWA_FEMALE_3539_C | int64 | Female population count aged 35–39 identifying as Non-Hispanic White alone in the county |
+| NHBA_FEMALE_1519_C | int64 | Female population count aged 15–19 identifying as Non-Hispanic Black or African American alone in the county |
+| NHBA_FEMALE_2024_C | int64 | Female population count aged 20–24 identifying as Non-Hispanic Black or African American alone in the county |
+| NHBA_FEMALE_2529_C | int64 | Female population count aged 25–29 identifying as Non-Hispanic Black or African American alone in the county |
+| NHBA_FEMALE_3034_C | int64 | Female population count aged 30–34 identifying as Non-Hispanic Black or African American alone in the county |
+| NHBA_FEMALE_3539_C | int64 | Female population count aged 35–39 identifying as Non-Hispanic Black or African American alone in the county |
 | dem2020_P                | float64   | Proportion of votes cast for the Democratic candidate in the 2020 election                           |
 | birth_rate_2020_N        | float64   | Birth rate in the county for year 2020, expressed as births per population unit (births per 1000)                     |
 | births_2020_N            | float64   | Total number of recorded births in the county during calendar year 2020                              |
+
 
 
 
