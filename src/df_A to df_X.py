@@ -5,70 +5,74 @@ import pandas as pd
 processed_path = "https://connorwtech.com/resources/downloads/processed/"
 
 
-# Load datasets
+# Load dataset df_A into df_X for transformations
 
-df_A = pd.read_csv(processed_path + 'df_A.csv')
+df_X = pd.read_csv(processed_path + 'df_A.csv')
 
 
 # Combine female age groups by race
 
-df_A["NHWA_FEMALE_2034_share_X"] = (
-    df_A["NHWA_FEMALE_2024_C"] + df_A["NHWA_FEMALE_2529_C"] + df_A["NHWA_FEMALE_3034_C"]
+df_X["NHWA_FEMALE_2034_share_X"] = (
+    df_X["NHWA_FEMALE_2024_C"] + df_X["NHWA_FEMALE_2529_C"] + df_X["NHWA_FEMALE_3034_C"]
     ) / (
-    df_A["TOT_FEMALE_2024_C"] + df_A["TOT_FEMALE_2529_C"] + df_A["TOT_FEMALE_3034_C"])
+    df_X["TOT_FEMALE_2024_C"] + df_X["TOT_FEMALE_2529_C"] + df_X["TOT_FEMALE_3034_C"])
 
-df_A["NHBA_FEMALE_2034_share_X"] = (
-    df_A["NHBA_FEMALE_2024_C"] + df_A["NHBA_FEMALE_2529_C"] + df_A["NHBA_FEMALE_3034_C"]
+df_X["NHBA_FEMALE_2034_share_X"] = (
+    df_X["NHBA_FEMALE_2024_C"] + df_X["NHBA_FEMALE_2529_C"] + df_X["NHBA_FEMALE_3034_C"]
     ) / (
-    df_A["TOT_FEMALE_2024_C"] + df_A["TOT_FEMALE_2529_C"] + df_A["TOT_FEMALE_3034_C"])
+    df_X["TOT_FEMALE_2024_C"] + df_X["TOT_FEMALE_2529_C"] + df_X["TOT_FEMALE_3034_C"])
 
-df_A["H_FEMALE_2034_share_X"] = (
-    df_A["H_FEMALE_2024_C"] + df_A["H_FEMALE_2529_C"] + df_A["H_FEMALE_3034_C"]
+df_X["H_FEMALE_2034_share_X"] = (
+    df_X["H_FEMALE_2024_C"] + df_X["H_FEMALE_2529_C"] + df_X["H_FEMALE_3034_C"]
     ) / (
-    df_A["TOT_FEMALE_2024_C"] + df_A["TOT_FEMALE_2529_C"] + df_A["TOT_FEMALE_3034_C"])
+    df_X["TOT_FEMALE_2024_C"] + df_X["TOT_FEMALE_2529_C"] + df_X["TOT_FEMALE_3034_C"])
 
 
 # Create race categories (default "Mixed")
 
-df_A["race_category_X"] = "Mixed"
+df_X["race_category_X"] = "Mixed"
 
-df_A.loc[df_A["NHWA_FEMALE_2034_share_X"] >= 0.6, "race_category_X"] = "White"
-df_A.loc[df_A["NHBA_FEMALE_2034_share_X"] >= 0.6, "race_category_X"] = "Black"
-df_A.loc[df_A["H_FEMALE_2034_share_X"] >= 0.6, "race_category_X"] = "Hispanic"
+df_X.loc[df_X["NHWA_FEMALE_2034_share_X"] >= 0.6, "race_category_X"] = "White"
+df_X.loc[df_X["NHBA_FEMALE_2034_share_X"] >= 0.6, "race_category_X"] = "Black"
+df_X.loc[df_X["H_FEMALE_2034_share_X"] >= 0.6, "race_category_X"] = "Hispanic"
 
 
 # Create "regime" variable by combining political preference and race categories (default "Minority-majority")
 
-df_A["regime_X"] = "Minority_majority"
+df_X["regime_X"] = "Minority_majority"
 
 # White-majority
-white_mask = df_A["NHWA_FEMALE_2034_share_X"] >= 0.6
+white_mask = df_X["NHWA_FEMALE_2034_share_X"] >= 0.6
 
 # Mixed
-mixed_mask = df_A["race_category_X"] == "Mixed"
+mixed_mask = df_X["race_category_X"] == "Mixed"
 
 # Political classification
-df_A["pol_group_X"] = "Competitive"
-df_A.loc[df_A["dem2010_P"] <= 0.4, "pol_group_X"] = "Republican"
-df_A.loc[df_A["dem2010_P"] >= 0.6, "pol_group_X"] = "Democratic"
+df_X["pol_group_X"] = "Competitive"
+df_X.loc[df_X["dem2010_P"] <= 0.4, "pol_group_X"] = "Republican"
+df_X.loc[df_X["dem2010_P"] >= 0.6, "pol_group_X"] = "Democratic"
 
 # Assign regimes
-df_A.loc[white_mask & (df_A["pol_group_X"] == "Republican"), "regime_X"] = "White_Republican"
-df_A.loc[white_mask & (df_A["pol_group_X"] == "Democratic"), "regime_X"] = "White_Democratic"
-df_A.loc[white_mask & (df_A["pol_group_X"] == "Competitive"), "regime_X"] = "White_Competitive"
+df_X.loc[white_mask & (df_X["pol_group_X"] == "Republican"), "regime_X"] = "White_Republican"
+df_X.loc[white_mask & (df_X["pol_group_X"] == "Democratic"), "regime_X"] = "White_Democratic"
+df_X.loc[white_mask & (df_X["pol_group_X"] == "Competitive"), "regime_X"] = "White_Competitive"
 
-df_A.loc[mixed_mask & (df_A["pol_group_X"] == "Republican"), "regime_X"] = "Mixed_Republican"
-df_A.loc[mixed_mask & (df_A["pol_group_X"] == "Democratic"), "regime_X"] = "Mixed_Democratic"
-df_A.loc[mixed_mask & (df_A["pol_group_X"] == "Competitive"), "regime_X"] = "Mixed_Competitive"
+df_X.loc[mixed_mask & (df_X["pol_group_X"] == "Republican"), "regime_X"] = "Mixed_Republican"
+df_X.loc[mixed_mask & (df_X["pol_group_X"] == "Democratic"), "regime_X"] = "Mixed_Democratic"
+df_X.loc[mixed_mask & (df_X["pol_group_X"] == "Competitive"), "regime_X"] = "Mixed_Competitive"
 
 
 # One-hot encoding
 
-df_A = df_A.loc[:, ~df_A.columns.str.startswith("reg_")]
+df_X = df_X.loc[:, ~df_X.columns.str.startswith("reg_")]
 
-regime_dummies = pd.get_dummies(df_A["regime_X"], prefix="reg")
+regime_dummies = pd.get_dummies(df_X["regime_X"], prefix="reg")
 
 regime_dummies.columns = regime_dummies.columns + '_X'
 
-# Attach to df_A
-df_A = pd.concat([df_A, regime_dummies], axis=1)
+# Attach to df_X
+df_X = pd.concat([df_X, regime_dummies], axis=1)
+
+save_path = "../data/processed/"
+
+df_X.to_csv(save_path + "df_X.csv", index=False)
