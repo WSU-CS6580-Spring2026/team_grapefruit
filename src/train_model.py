@@ -18,8 +18,8 @@ import os
 from joblib import dump
 
 interim_path = "https://connorwtech.com/resources/downloads/interim/"
-#processed_path = "https://connorwtech.com/resources/downloads/processed/"
-processed_path = "../data/processed/"
+processed_path = "https://connorwtech.com/resources/downloads/processed/"
+#processed_path = "../data/processed/"
 
 pd.set_option("display.max_rows", None)
 pd.set_option("display.width", None)
@@ -71,7 +71,7 @@ df_I["br_pct_change"] = (df_I["birth_rate_2020_N"] - df_I["birth_rate_2010_N"]) 
 df_I = df_I.replace([np.inf, -np.inf], np.nan).dropna(subset=["br_pct_change", "birth_rate_2010_N"])
 
 reg_cols_I = [c for c in df_I.columns if c.startswith("reg_")]
-ref_I = "reg_White-Competitive"
+ref_I = "reg_White_Competitive_X"
 reg_cols_model_I = [c for c in reg_cols_I if c != ref_I]
 
 X_I = df_I[reg_cols_model_I].astype(int)          # regime-only
@@ -120,7 +120,7 @@ df_II["excess_2020"] = df_II["birth_rate_2020_N"] - df_II["br2020_pred_from2010"
 
 # 2 - model excess using regimes
 reg_cols_II = [c for c in df_II.columns if c.startswith("reg_")]
-ref_II = "reg_White-Competitive"
+ref_II = "reg_White_Competitive_X"
 reg_cols_model_II = [c for c in reg_cols_II if c != ref_II]
 
 X_II = df_II[reg_cols_model_II].astype(int)
@@ -162,7 +162,7 @@ reg_cols_III = [c for c in df_III.columns if c.startswith("reg_")]
 for c in reg_cols_III:
     df_III[c] = df_III[c].astype(int)
 
-ref_III = "reg_White-Competitive"
+ref_III = "reg_White_Competitive_X"
 reg_cols_model_III = [c for c in reg_cols_III if c != ref_III]
 
 # Upgrade code to handle hyphens
