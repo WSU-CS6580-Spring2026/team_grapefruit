@@ -254,7 +254,7 @@ df_app = df_app.merge(
     how="left"
 )
 
-def nearest_lists(                # closest entities by projected birth rate
+def nearest_lists(
     df_app: pd.DataFrame,
     selected_fips: str,
     rate_col: str = "birth_rate_2030_pred",
@@ -276,24 +276,29 @@ def nearest_lists(                # closest entities by projected birth rate
     cand = df.dropna(subset=[rate_col]).copy()
     cand["abs_diff"] = (cand[rate_col] - target_rate).abs()
 
-    # closest k, then display in numerical order by rate
+    # ---- OVERALL LIST ----
+    # Sort by distance
+    sorted_cand = cand.sort_values("abs_diff")
+
+    # Take k+1 closest (this includes the selected county automatically)
     overall = (
-        cand.sort_values("abs_diff")
-            .head(k)
-            .sort_values(rate_col)
-            .copy()
+        sorted_cand.head(k + 1)
+                   .sort_values(rate_col)
+                   .copy()
     )
 
+    # ---- SAME-REGIME LIST ----
     same = None
     if regime_col in df.columns and pd.notna(target[regime_col]):
         same_reg = cand[cand[regime_col] == target[regime_col]].copy()
         same = (
             same_reg.sort_values("abs_diff")
-                    .head(k)
+                    .head(k + 1)
                     .sort_values(rate_col)
                     .copy()
         )
 
+    # ---- FORMAT OUTPUT ----
     def format_out(d):
         if d is None:
             return None
@@ -313,7 +318,6 @@ def county_report(df_app: pd.DataFrame, selection: str, k: int = 5, rate_col: st
       - dropdown_label (e.g., 'Utah - Weber')
     Returns a dict with the selected county details + two neighbor tables.
     """
-
     df = df_app.copy()
     df["fips"] = df["fips"].astype(str).str.zfill(5)
 
@@ -496,20 +500,23 @@ def print_county_summary(report: dict):
         st.write(f"**2010:** {panel.get('2010 Socio-Political Category', '')}")
         st.write(f"**2020:** {panel.get('2020 Socio-Political Category', '')}")
 
-def print_county_tables(report: dict, show_any=True, show_same=True, k_any=5, k_same=5):
+def print_county_tables(report_any: dict, report_same: dict, show_any=True, show_same=True, k_any=5, k_same=5):
     if show_any:
         st.subheader(f"{k_any} Closest Counties by Projected 2030 Birth Rate")
 
-        df_any_full = report["nearest_any"].copy()
+        df_any_full = report_any["nearest_any"].copy()
         df_any_selected = df_any_full[df_any_full["is_selected"] == 1]
         df_any_others = df_any_full[df_any_full["is_selected"] != 1]
 
-        df_any = pd.concat(
-            [df_any_selected, df_any_others.head(k_any - 1)],
-            ignore_index=True
-        )
+        # df_any = pd.concat(
+        #     [df_any_selected, df_any_others.head(k_any)],
+        #     ignore_index=True
+        # )
+        
+        df_any = df_any_full.head(k_any + 1)
+        
         df_any["rate"] = df_any["rate"].round(2)
-
+        
         styled_any = (
             df_any.style
             .format({"rate": "{:.2f}"})
@@ -531,16 +538,21 @@ def print_county_tables(report: dict, show_any=True, show_same=True, k_any=5, k_
     if show_same:
         st.subheader(f"{k_same} Closest Counties in the Same Socio-Political Category")
 
-        ns = report["nearest_same_regime"]
+        ns = report_same["nearest_same_regime"]
+        print("NS: ")
+        print(ns)
+        print("\n\n")
         if ns is not None:
             df_same_full = ns.copy()
             df_same_selected = df_same_full[df_same_full["is_selected"] == 1]
             df_same_others = df_same_full[df_same_full["is_selected"] != 1]
 
-            df_same = pd.concat(
-                [df_same_selected, df_same_others.head(k_same - 1)],
-                ignore_index=True
-            )
+            df_same = df_same_full.head(k_same + 1)
+            
+            # df_same = pd.concat(
+            #     [df_same_selected, df_same_others.head(k_same)],
+            #     ignore_index=True
+            # )
             df_same["rate"] = df_same["rate"].round(2)
 
             styled_same = (
@@ -640,7 +652,7 @@ def print_county_report2(report: dict, show_any=True, show_same=True, k_any=5, k
         df_any_others = df_any_full[df_any_full["is_selected"] != 1]
 
         df_any = pd.concat(
-            [df_any_selected, df_any_others.head(k_any - 1)],
+            [df_any_selected, df_any_others.head(k_any + 1)],
             ignore_index=True
         )
         df_any["rate"] = df_any["rate"].round(2)
@@ -675,7 +687,7 @@ def print_county_report2(report: dict, show_any=True, show_same=True, k_any=5, k
             df_same_others = df_same_full[df_same_full["is_selected"] != 1]
 
             df_same = pd.concat(
-                [df_same_selected, df_same_others.head(k_same - 1)],
+                [df_same_selected, df_same_others.head(k_same + 1)],
                 ignore_index=True
             )
             df_same["rate"] = df_same["rate"].round(2)
@@ -726,7 +738,11 @@ k_same = st.sidebar.slider("How many (same category)", min_value=1, max_value=10
 
 k_max = max(k_any, k_same)
 
+rep_any  = county_report(df_app, st_cnt, k=k_any,  rate_col="birth_rate_2030_pred")
+rep_same = county_report(df_app, st_cnt, k=k_same, rate_col="birth_rate_2030_pred")
+
 rep = county_report(df_app, st_cnt, k=k_max, rate_col="birth_rate_2030_pred")
+
 
 # ---- Main layout ----
 left, right = st.columns([1.2, 0.8])
@@ -740,7 +756,8 @@ with right:
 
 # ---- Tables below ----
 print_county_tables(
-    rep,
+    rep_any,
+    rep_same,
     show_any=show_any,
     show_same=show_same,
     k_any=k_any,
