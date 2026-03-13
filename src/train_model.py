@@ -29,7 +29,9 @@ pd.set_option("display.max_colwidth", None)
 # Load Datasets
 # One df_X.csv is created we can replace df_A with df_X and run the same code
 # to train the model on the new dataset. 
+# Once df_2010.csv is added to server this can be replaced by the line below.
 df_X = pd.read_csv(processed_path + "df_X.csv")
+# df_2010 = pd.read_csv(processed_path + 'df_2010.csv')
 
 # Baseline Model
 # Target
