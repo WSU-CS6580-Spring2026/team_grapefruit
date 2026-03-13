@@ -15,7 +15,10 @@ interim_path = "https://connorwtech.com/resources/downloads/interim/"
 
 df_A = pd.read_csv(processed_path + 'df_A.csv')
 df_B = pd.read_csv(processed_path + 'df_B.csv')
+# Once df_2010.csv and df_2020.csv are on the server this can be replaced by the two lines below.
 df_2010 = pd.read_csv(processed_path + 'df_X.csv')
+# df_2010 = pd.read_csv(processed_path + 'df_2010.csv')
+# df_2020 = pd.read_csv(processed_path + 'df_2020.csv')
 P = pd.read_csv(interim_path + "/countypres_2000-2024_interim.csv")
 
 C10 = pd.read_csv(
@@ -32,6 +35,7 @@ C20 = pd.read_csv(
 # NOTE: IT IS INTENDED THAT THIS WILL BE EARLIER STANDALONE CODE, OR INTEGRATED INTO PRIOR CODE, TO CREATE df_2020.csv
 # ALSO NOTE: it is intended that the current df_X.csv will be renamed as df_2010.csv; that should happen in the original generation code
 
+# Once df_2020.csv is added to the server this section can be deleted
 df_2020 = pd.read_csv(processed_path + 'df_B.csv')
 
 
@@ -97,6 +101,8 @@ regime_dummies.columns = regime_dummies.columns + '_X'
 
 # Attach to df_2020
 df_2020 = pd.concat([df_2020, regime_dummies], axis=1)
+
+# Can be Deleted all the way to here once df_2020.csv is added to server
 
 # normalize fips
 df_2010["fips"] = df_2010["fips"].astype(str).str.zfill(5)
