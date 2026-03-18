@@ -7,8 +7,20 @@ import streamlit as st
 import geopandas as gpd
 import joblib
 from pathlib import Path
+from PIL import Image
 
-def plot_county_highlight(fips_code: str, county_name: str):
+# Load image
+ROOT = Path(__file__).resolve().parent.parent
+
+img = Image.open(ROOT / 'docs/social political demographic groups_hc.PNG')
+
+def plot_county_highlight(fips_code: str, county_name: str, df_rates: pd.DataFrame):
+    """
+    df_rates must contain:
+        - 'fips' (string)
+        - 'rate' (float, may contain NaN)
+    """
+
     state_fips = fips_code[:2]
 
     counties_url = "https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json"
@@ -16,29 +28,63 @@ def plot_county_highlight(fips_code: str, county_name: str):
 
     counties["id"] = counties["id"].astype(str)
 
-    # --- Only reproject if Alaska ---
+    # --- Reproject only for Alaska ---
     if state_fips == "02":
         counties = counties.to_crs("EPSG:3338")   # Alaska Albers
     else:
-        counties = counties.to_crs("EPSG:3857")   # Web Mercator (good for lower 48)
-        # counties = counties.to_crs("EPSG:4326") # also fine if you prefer lat/lon
+        counties = counties.to_crs("EPSG:3857")   # Web Mercator
 
-    state_counties = counties[counties["id"].str.startswith(state_fips)]
-    selected = counties[counties["id"] == fips_code]
+    # --- Filter to state ---
+    state_counties = counties[counties["id"].str.startswith(state_fips)].copy()
 
+    # --- Merge in birth-rate values ---
+    df_rates = df_rates.copy()
+    df_rates["fips"] = df_rates["fips"].astype(str)
+
+    state_counties = state_counties.merge(
+        df_rates[["fips", "rate"]],
+        left_on="id",
+        right_on="fips",
+        how="left"
+    )
+
+    # --- Selected county geometry ---
+    selected = state_counties[state_counties["id"] == fips_code]
     if selected.empty:
         raise ValueError(f"FIPS {fips_code} not found")
 
+    # --- Plot ---
     fig, ax = plt.subplots(figsize=(7, 7))
 
-    state_counties.plot(ax=ax, color="#e0e0e0", edgecolor="black", linewidth=0.5)
-    selected.plot(ax=ax, color="orange", edgecolor="red", linewidth=1.5)
+    # Heatmap: counties with rate → colormap, missing → grey
+    state_counties.plot(
+        ax=ax,
+        column="rate",
+        cmap="viridis",
+        missing_kwds={
+            "color": "lightgrey",
+            "edgecolor": "black",
+            "hatch": "///",
+            "label": "No data"
+        },
+        linewidth=0.4,
+        edgecolor="black"
+    )
+
+    # Highlight selected county
+    selected.plot(
+        ax=ax,
+        facecolor="none",
+        edgecolor="red",
+        linewidth=2.0
+    )
 
     ax.set_title(f"{county_name} : {fips_code}")
     ax.axis("off")
 
-    st.pyplot(fig, width='content')
+    st.pyplot(fig, width="content")
     plt.close(fig)
+
     
 st.set_page_config(layout="wide")
 
@@ -520,142 +566,142 @@ def print_county_tables(report_any: dict, report_same: dict, show_any=True, show
         else:
             st.write("(No same-category matches available)")
 
-# display county report to Streamlit
-def print_county_report2(report: dict, show_any=True, show_same=True, k_any=5, k_same=5):
-    panel = report["panel"]
+# # display county report to Streamlit
+# def print_county_report2(report: dict, show_any=True, show_same=True, k_any=5, k_same=5):
+#     panel = report["panel"]
 
-    county = panel.get("County", "")
-    state = panel.get("State", "")
+#     county = panel.get("County", "")
+#     state = panel.get("State", "")
 
-    lower = panel.get("2030 projection (95% lower)")
-    upper = panel.get("2030 projection (95% upper)")
+#     lower = panel.get("2030 projection (95% lower)")
+#     upper = panel.get("2030 projection (95% upper)")
 
-    highlight_blue = "#476a9f"
+#     highlight_blue = "#476a9f"
 
-    # Title
-    st.markdown(
-        f"""
-        <h1 style="color: {highlight_blue}; margin-bottom: 0;">
-            {county} County, {state}
-        </h1>
-        """,
-        unsafe_allow_html=True
-    )
+#     # Title
+#     st.markdown(
+#         f"""
+#         <h1 style="color: {highlight_blue}; margin-bottom: 0;">
+#             {county} County, {state}
+#         </h1>
+#         """,
+#         unsafe_allow_html=True
+#     )
 
-    st.caption("County demographic profile and projected 2030 birth rate per 1,000 population")
+#     st.caption("County demographic profile and projected 2030 birth rate per 1,000 population")
 
-    st.subheader("County Summary")
+#     st.subheader("County Summary")
 
-    col1, col2 = st.columns(2)
+#     col1, col2 = st.columns(2)
 
-    with col1:
-        st.markdown(
-            f'<p style="color: {highlight_blue}; font-weight: bold; font-size: 1.1rem;">Location</p>',
-            unsafe_allow_html=True
-        )
-        st.write(f"**State:** {panel.get('State', '')}")
-        st.write(f"**County:** {panel.get('County', '')}")
-        st.write(f"**FIPS:** {panel.get('FIPS', '')}")
+#     with col1:
+#         st.markdown(
+#             f'<p style="color: {highlight_blue}; font-weight: bold; font-size: 1.1rem;">Location</p>',
+#             unsafe_allow_html=True
+#         )
+#         st.write(f"**State:** {panel.get('State', '')}")
+#         st.write(f"**County:** {panel.get('County', '')}")
+#         st.write(f"**FIPS:** {panel.get('FIPS', '')}")
 
-        st.markdown(
-            f'<p style="color: {highlight_blue}; font-weight: bold; font-size: 1.1rem; margin-top: 1rem;">Birth Rates</p>',
-            unsafe_allow_html=True
-        )
-        st.write(f"**2010 Birth Rate:** {panel.get('2010 birth rate', 0):.2f}")
-        st.write(f"**2020 Birth Rate:** {panel.get('2020 birth rate', 0):.2f}")
-        st.write(f"**2030 Projected Birth Rate:** {panel.get('2030 birth rate (projected)', 0):.2f}")
+#         st.markdown(
+#             f'<p style="color: {highlight_blue}; font-weight: bold; font-size: 1.1rem; margin-top: 1rem;">Birth Rates</p>',
+#             unsafe_allow_html=True
+#         )
+#         st.write(f"**2010 Birth Rate:** {panel.get('2010 birth rate', 0):.2f}")
+#         st.write(f"**2020 Birth Rate:** {panel.get('2020 birth rate', 0):.2f}")
+#         st.write(f"**2030 Projected Birth Rate:** {panel.get('2030 birth rate (projected)', 0):.2f}")
 
-        if lower is not None and upper is not None:
-            st.write(f"**2030 Projection (95% CI):** {lower:.2f} - {upper:.2f}")
+#         if lower is not None and upper is not None:
+#             st.write(f"**2030 Projection (95% CI):** {lower:.2f} - {upper:.2f}")
 
-    with col2:
-        st.markdown(
-            f'<p style="color: {highlight_blue}; font-weight: bold; font-size: 1.1rem;">Population</p>',
-            unsafe_allow_html=True
-        )
-        st.write(f"**2010 Population:** {int(panel.get('2010 population', 0)):,}")
-        st.write(f"**2020 Population:** {int(panel.get('2020 population', 0)):,}")
+#     with col2:
+#         st.markdown(
+#             f'<p style="color: {highlight_blue}; font-weight: bold; font-size: 1.1rem;">Population</p>',
+#             unsafe_allow_html=True
+#         )
+#         st.write(f"**2010 Population:** {int(panel.get('2010 population', 0)):,}")
+#         st.write(f"**2020 Population:** {int(panel.get('2020 population', 0)):,}")
 
-        st.markdown(
-            f'<p style="color: {highlight_blue}; font-weight: bold; font-size: 1.1rem; margin-top: 1rem;">Socio-Political Category</p>',
-            unsafe_allow_html=True
-        )
-        st.write(f"**2010:** {panel.get('2010 Socio-Political Category', '')}")
-        st.write(f"**2020:** {panel.get('2020 Socio-Political Category', '')}")
+#         st.markdown(
+#             f'<p style="color: {highlight_blue}; font-weight: bold; font-size: 1.1rem; margin-top: 1rem;">Socio-Political Category</p>',
+#             unsafe_allow_html=True
+#         )
+#         st.write(f"**2010:** {panel.get('2010 Socio-Political Category', '')}")
+#         st.write(f"**2020:** {panel.get('2020 Socio-Political Category', '')}")
 
 
-    st.subheader("Birth Rate Trend")
-    plot_county_trend_with_cone(df_app, st_cnt)
+#     st.subheader("Birth Rate Trend")
+#     plot_county_trend_with_cone(df_app, st_cnt)
 
-    # ---- nearest_any table ----
-    if show_any:
-        st.subheader(f"{k_any} Closest Counties by Projected 2030 Birth Rate")
+#     # ---- nearest_any table ----
+#     if show_any:
+#         st.subheader(f"{k_any} Closest Counties by Projected 2030 Birth Rate")
 
-        df_any_full = report["nearest_any"].copy()
+#         df_any_full = report["nearest_any"].copy()
 
-        df_any_selected = df_any_full[df_any_full["is_selected"] == 1]
-        df_any_others = df_any_full[df_any_full["is_selected"] != 1]
+#         df_any_selected = df_any_full[df_any_full["is_selected"] == 1]
+#         df_any_others = df_any_full[df_any_full["is_selected"] != 1]
 
-        df_any = pd.concat(
-            [df_any_selected, df_any_others.head(k_any + 1)],
-            ignore_index=True
-        )
-        df_any["rate"] = df_any["rate"].round(2)
+#         df_any = pd.concat(
+#             [df_any_selected, df_any_others.head(k_any + 1)],
+#             ignore_index=True
+#         )
+#         df_any["rate"] = df_any["rate"].round(2)
 
-        styled_any = (
-            df_any.style
-            .format({"rate": "{:.2f}"})
-            .apply(highlight_selected_row, axis=1)
-            .set_properties(subset=["rate"], **{"text-align": "right"})
-        )
+#         styled_any = (
+#             df_any.style
+#             .format({"rate": "{:.2f}"})
+#             .apply(highlight_selected_row, axis=1)
+#             .set_properties(subset=["rate"], **{"text-align": "right"})
+#         )
 
-        st.dataframe(
-            styled_any,
-            hide_index=True,
-            width='content',
-            column_config={
-                "label": st.column_config.TextColumn("County", width="medium"),
-                "rate": st.column_config.NumberColumn("2030 Birth Rate (per 1,000)", format="%.2f"),
-                "is_selected": None,
-            },
-        )
+#         st.dataframe(
+#             styled_any,
+#             hide_index=True,
+#             width='content',
+#             column_config={
+#                 "label": st.column_config.TextColumn("County", width="medium"),
+#                 "rate": st.column_config.NumberColumn("2030 Birth Rate (per 1,000)", format="%.2f"),
+#                 "is_selected": None,
+#             },
+#         )
 
-    # ---- nearest_same_regime table ----
-    if show_same:
-        st.subheader(f"{k_same} Closest Counties in the Same Socio-Political Category")
+#     # ---- nearest_same_regime table ----
+#     if show_same:
+#         st.subheader(f"{k_same} Closest Counties in the Same Socio-Political Category")
 
-        ns = report["nearest_same_regime"]
-        if ns is not None:
-            df_same_full = ns.copy()
+#         ns = report["nearest_same_regime"]
+#         if ns is not None:
+#             df_same_full = ns.copy()
 
-            df_same_selected = df_same_full[df_same_full["is_selected"] == 1]
-            df_same_others = df_same_full[df_same_full["is_selected"] != 1]
+#             df_same_selected = df_same_full[df_same_full["is_selected"] == 1]
+#             df_same_others = df_same_full[df_same_full["is_selected"] != 1]
 
-            df_same = pd.concat(
-                [df_same_selected, df_same_others.head(k_same + 1)],
-                ignore_index=True
-            )
-            df_same["rate"] = df_same["rate"].round(2)
+#             df_same = pd.concat(
+#                 [df_same_selected, df_same_others.head(k_same + 1)],
+#                 ignore_index=True
+#             )
+#             df_same["rate"] = df_same["rate"].round(2)
 
-            styled_same = (
-                df_same.style
-                .format({"rate": "{:.2f}"})
-                .apply(highlight_selected_row, axis=1)
-                .set_properties(subset=["rate"], **{"text-align": "right"})
-            )
+#             styled_same = (
+#                 df_same.style
+#                 .format({"rate": "{:.2f}"})
+#                 .apply(highlight_selected_row, axis=1)
+#                 .set_properties(subset=["rate"], **{"text-align": "right"})
+#             )
 
-            st.dataframe(
-                styled_same,
-                hide_index=True,
-                width='content',
-                column_config={
-                    "label": st.column_config.TextColumn("County", width="medium"),
-                    "rate": st.column_config.NumberColumn("2030 Birth Rate (per 1,000)", format="%.2f"),
-                    "is_selected": None,
-                },
-            )
-        else:
-            st.write("(No same-category matches available)")
+#             st.dataframe(
+#                 styled_same,
+#                 hide_index=True,
+#                 width='content',
+#                 column_config={
+#                     "label": st.column_config.TextColumn("County", width="medium"),
+#                     "rate": st.column_config.NumberColumn("2030 Birth Rate (per 1,000)", format="%.2f"),
+#                     "is_selected": None,
+#                 },
+#             )
+#         else:
+#             st.write("(No same-category matches available)")
 
 
 # launch section
@@ -709,4 +755,14 @@ with left:
 with right:
     st.subheader("Birth Rate Trend")
     plot_county_trend_with_cone(df_app, st_cnt)
-    plot_county_highlight(rep["panel"]["FIPS"], st_cnt)
+    df_rates = df_app[["fips", "birth_rate_2030_pred"]].rename(
+        columns={"birth_rate_2030_pred": "rate"}
+    )
+    
+    plot_county_highlight(
+        rep["panel"]["FIPS"],
+        st_cnt,
+        df_rates
+    )
+
+    st.image(img)
