@@ -7,6 +7,10 @@
 </ul>
 <p>County, state and local governments would use our project to understand the demographics surrounding lower birth rates, and adopt strategies to adapt to their specific situation.</p>
 
+### To Run
+Navigate to src directory in cmd then run:
+```streamlit run .\sprint04c.py```
+
 ## 🚦 Project Status
 **Current Phase:** Modeling and Evaluation<br>
 **Sprint 3 Goal:** Create a "Champion" model selected based on clear, quantifiable metrics.<br>
