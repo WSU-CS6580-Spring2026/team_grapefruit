@@ -145,3 +145,57 @@ df_2020 = pd.concat([df_2020, regime_dummies], axis=1)
 save_path = "../data/processed/"
 
 df_2020.to_csv(save_path + "df_2020.csv", index=False)
+
+interim_path = "https://connorwtech.com/resources/downloads/interim/"
+
+P = pd.read_csv(interim_path + "countypres_2000-2024_interim.csv")
+
+C10 = pd.read_csv(interim_path + "cc-est2019-alldata_interim.csv", encoding="latin1")
+C20 = pd.read_csv(interim_path + "cc-est2023-alldata_interim.csv", encoding="latin1")
+
+# Update names from P
+P_tmp = P[["county_fips", "state", "county_name"]].copy()
+P_tmp["fips"] = P_tmp["county_fips"].astype(str).str.replace(r"\.0$", "", regex=True).str.zfill(5)
+P_tmp = P_tmp.drop(columns=["county_fips"]).drop_duplicates("fips")
+
+P_tmp["state"] = P_tmp["state"].astype(str).str.title()
+P_tmp["county"] = P_tmp["county_name"].astype(str).str.title()
+P_tmp = P_tmp.drop(columns=["county_name"])
+
+# 2010 population lookup
+pop10 = C10[
+    (C10["SUMLEV"] == 50) &
+    (C10["AGEGRP"] == 0)
+][["STATE", "COUNTY", "TOT_POP"]].copy()
+
+pop10["fips"] = (
+    pop10["STATE"].astype(int).astype(str).str.zfill(2) +
+    pop10["COUNTY"].astype(int).astype(str).str.zfill(3)
+)
+
+pop10 = pop10.rename(columns={"TOT_POP": "pop_2010"})
+pop10 = pop10[["fips", "pop_2010"]]
+
+# 2020 population
+pop20 = C20[
+    (C20["SUMLEV"] == 50) &
+    (C20["AGEGRP"] == 0)
+][["STATE", "COUNTY", "TOT_POP"]].copy()
+
+pop20["fips"] = (
+    pop20["STATE"].astype(int).astype(str).str.zfill(2) +
+    pop20["COUNTY"].astype(int).astype(str).str.zfill(3)
+)
+
+pop20 = pop20.rename(columns={"TOT_POP": "pop_2020"})
+pop20 = pop20[["fips", "pop_2020"]]
+
+df_counties = (
+    P_tmp
+    .merge(pop10, on="fips", how="left")
+    .merge(pop20, on="fips", how="left")
+)
+
+save_path = "../data/processed/"
+
+df_counties.to_csv(save_path + "df_counties.csv", index=False)
