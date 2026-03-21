@@ -42,13 +42,13 @@ Navigate to src directory in cmd then run:
 |    5	| 0.855789	| 0.683799 |
 
 ### Sprint 4
-**Entire focus on class presentation
-**Class presentation on Thursday, March 19th went well but was rushed and abbreviated due to classtime constraints
-**Some details were omitted as a result, e.g., the focus on how merged on the FIPS column and how that works. However, it was included in the visual.
+**Entire focus on class presentation**
+**Class presentation on Thursday, March 19th went well but was rushed and abbreviated due to classtime constraints**
+**Some details were omitted as a result, e.g., the focus on how merged on the FIPS column and how that works. However, it was included in the visual.**
 
 ### Sprint 5
-**Part 1 (Progress Sync / Testing Phase) due Mar 31, 2026
-**Part 2 (Final Due / Implementation Phase) due Apr 7, 2026
+**Part 1 (Progress Sync / Testing Phase) due Mar 31, 2026**
+**Part 2 (Final Due / Implementation Phase) due Apr 7, 2026**
 
 ## Project Board
 We track all work using the GitHub Project Board:<br>
