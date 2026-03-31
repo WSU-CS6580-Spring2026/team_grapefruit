@@ -9,7 +9,7 @@
 
 ### To Run
 Navigate to src directory in cmd then run:
-```streamlit run .\sprint04c.py```
+```streamlit run .\dashboard.py```
 
 ## 🚦 Project Status
 **Current Phase:** Modeling and Evaluation<br>
