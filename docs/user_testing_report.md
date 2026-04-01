@@ -22,7 +22,10 @@ Users struggled finding where the number is
 
 \### Jacob
 
-
+* User would like to be able to change countie by clicking on the map.
+* User would like to compare birth rates to neighboring counties, rather than 5 with similar birth rates.
+* User would like to see any easier way to expand the images.
+* User would like to compare each county to the state as a whole, or the country as a whole.
 
 
 
