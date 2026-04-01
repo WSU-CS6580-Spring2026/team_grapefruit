@@ -32,15 +32,15 @@ Users struggled finding where the number is
 
 <ul>
 
-<li>\*Intro at top</li>
+<li>\*Intro at top [#89 - Sprint 05 - 02B_1M]</li>
 
-<li>\*Key on Map</li>
+<li>\*Key on Map [#90 - Sprint 05 - 02B_2M]</li>
 
-<li>Separate State/County Drop Down</li>
+<li>Separate State/County Drop Down [#91 - Sprint 05 - 02B_1O]</li>
 
-<li>Political Regime Filter</li>
+<li>Political Regime Filter [#92 - Sprint 05 - 02B_2O]</li>
 
-<li>Visualization of where population vs death rate</li>
+<li>Visualization of where population vs death rate [#93 - Sprint 05 - 02B_1U]</li>
 
 </ul>
 
