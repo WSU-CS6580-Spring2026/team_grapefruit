@@ -8,7 +8,9 @@ The below three sections are observations from each team members user testing vi
 
 \### Dave
 
-
+* Page lacks explanations about its purpose and basic usage
+* Map colors are confusing and unclear as to their meaning
+* Map and table don't link to additional counties
 
 \### Connor
 
@@ -26,7 +28,7 @@ Users struggled finding where the number is
 
 \### Proposed Remedial Actions
 
-'\*' definitely will do, other actions will be taken depending on time.
+'\*' definitely will do, other actions will be taken depending on feasibility (i.e., can Streamlit perform this, does it use too many system resources, is it too complex for the allowed time).
 
 <ul>
 
