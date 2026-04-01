@@ -12,12 +12,11 @@ The below three sections are observations from each team members user testing vi
 * Map colors are confusing and unclear as to their meaning
 * Map and table don't link to additional counties
 
+
 \### Connor
 
-Users struggled with the drop down
-
-Users struggled finding where the number is
-
+* Users struggled with the drop down
+* Users struggled finding where the number is
 
 
 \### Jacob
@@ -35,9 +34,9 @@ Users struggled finding where the number is
 
 <ul>
 
-<li>\*Intro at top [#89 - Sprint 05 - 02B_1M]</li>
+<li>*Intro at top [#89 - Sprint 05 - 02B_1M]</li>
 
-<li>\*Key on Map [#90 - Sprint 05 - 02B_2M]</li>
+<li>*Key on Map [#90 - Sprint 05 - 02B_2M]</li>
 
 <li>Separate State/County Drop Down [#91 - Sprint 05 - 02B_1O]</li>
 
