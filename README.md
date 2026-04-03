@@ -58,8 +58,8 @@ We track all work using the GitHub Project Board:<br>
 
 | Issue | Description | Owner | Status |
 |------|-------------|-------|--------|
-| #46 | Sprint 04 - 02A (Dashboard) | Dave, Jacob, Connor | ⏳ Unstarted |
-| #47 | Sprint 04 - 03A (Storytelling) | Dave, Jacob, Connor | ⏳ Unstarted |
+| #84 | Sprint 05 - 02B (Refinement) | Dave, Jacob, Connor | ⏳ Planning |
+| #85 | Sprint 05 - 02C (Refactoring) | Dave, Jacob, Connor | ⏳ Unstarted |
 
 
 
