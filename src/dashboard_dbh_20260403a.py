@@ -57,7 +57,7 @@ def plot_county_highlight(fips_code: str, county_name: str, df_rates: pd.DataFra
     # --- Plot ---
     fig, ax = plt.subplots(figsize=(7, 7))
 
-    # Heatmap: counties with rate → colormap, missing → grey
+    # Heatmap
     state_counties.plot(
         ax=ax,
         column="rate",
@@ -69,7 +69,12 @@ def plot_county_highlight(fips_code: str, county_name: str, df_rates: pd.DataFra
             "label": "No data"
         },
         linewidth=0.4,
-        edgecolor="black"
+        edgecolor="black",
+        legend=True,                # <-- adds colorbar
+        legend_kwds={
+            "label": "Projected 2030 Birth Rate (per 1,000)",
+            "shrink": 0.6
+        }
     )
 
     # Highlight selected county
@@ -77,7 +82,27 @@ def plot_county_highlight(fips_code: str, county_name: str, df_rates: pd.DataFra
         ax=ax,
         facecolor="none",
         edgecolor="red",
-        linewidth=2.0
+        linewidth=2.0,
+        label="Selected County"
+    )
+
+    # --- Add legend entry for missing data ---
+    import matplotlib.patches as mpatches
+    no_data_patch = mpatches.Patch(
+        facecolor="lightgrey",
+        edgecolor="black",
+        hatch="///",
+        label="No data"
+    )
+    selected_patch = mpatches.Patch(
+        facecolor="none",
+        edgecolor="red",
+        label="Selected County"
+    )
+
+    ax.legend(
+        handles=[no_data_patch, selected_patch],
+        loc="lower left"
     )
 
     ax.set_title(f"{county_name} : {fips_code}")
@@ -85,6 +110,7 @@ def plot_county_highlight(fips_code: str, county_name: str, df_rates: pd.DataFra
 
     st.pyplot(fig, width="content")
     plt.close(fig)
+
 
     
 st.set_page_config(layout="wide")
