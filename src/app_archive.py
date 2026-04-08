@@ -9,19 +9,11 @@ import joblib
 from pathlib import Path
 from PIL import Image
 import os
-import urllib.request
-from PIL import Image
-import io
-
-import urllib.request
-import tempfile
 
 # Load image
 ROOT = Path(__file__).resolve().parent.parent
 
-img_url = "https://raw.githubusercontent.com/WSU-CS6580-Spring2026/team_grapefruit/main/docs/social%20political%20demographic%20groups_hc.PNG"
-
-img = Image.open(io.BytesIO(urllib.request.urlopen(img_url).read()))
+img = Image.open(ROOT / 'docs/social political demographic groups_hc.PNG')
 
 def plot_county_highlight(fips_code: str, county_name: str, df_rates: pd.DataFrame):
     """
@@ -153,11 +145,17 @@ st.markdown(
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 processed_path = os.path.join(BASE_DIR, "data", "processed")
 
-base_url = "https://raw.githubusercontent.com/WSU-CS6580-Spring2026/team_grapefruit/main/data/processed/"
+import os
+import pandas as pd
+import streamlit as st
 
-df_2010 = pd.read_csv(base_url + "df_2010.csv")
-df_2020 = pd.read_csv(base_url + "df_2020.csv")
-df_counties = pd.read_csv(base_url + "df_counties.csv")
+file_2010 = os.path.join(processed_path, "df_2010.csv")
+file_2020 = os.path.join(processed_path, "df_2020.csv")
+file_counties = os.path.join(processed_path, "df_counties.csv")
+
+df_2010 = pd.read_csv(file_2010)
+df_2020 = pd.read_csv(file_2020)
+df_counties = pd.read_csv(file_counties)
 
 # normalize fips
 df_2010["fips"] = df_2010["fips"].astype(str).str.zfill(5)
@@ -203,13 +201,17 @@ reg_cols = [
     "reg_White_Republican_X",
 ]
 
-model_url = "https://raw.githubusercontent.com/WSU-CS6580-Spring2026/team_grapefruit/main/model/full_interaction_model.joblib"
+# Path to the project root (folder containing "model/")
+ROOT = Path(__file__).resolve().parent.parent
 
-tmp_model = tempfile.NamedTemporaryFile(delete=False, suffix=".joblib")
-urllib.request.urlretrieve(model_url, tmp_model.name)
+# Path to the model directory
+MODEL_DIR = ROOT / "model"
 
-loaded = joblib.load(tmp_model.name)
-fit = loaded["model"]
+# Load the model
+model_path = MODEL_DIR / "full_interaction_model.joblib"
+
+loaded = joblib.load(model_path)
+fit = loaded["model"]   # <-- this is the actual statsmodels model
 
 
 # -------------------------
