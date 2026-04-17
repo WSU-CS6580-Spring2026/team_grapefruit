@@ -64,11 +64,11 @@ We track all work using the GitHub Project Board:<br>
 
 | Issue | Description | Owner | Status |
 |------|-------------|-------|--------|
-| #98 | Sprint 06 - 02B (Final Report) | Dave | ⏳ In Progress |
-| #95 | Sprint 05 - 02A1 (Final Merge) | Connor | ⏳ Unstarted |
-| #96 | Sprint 05 - 02A2 (Reproducibility) | Connor | ⏳ Unstarted |
-| #97 | Sprint 05 - 02A3 (Cleanup) | Connor | ⏳ Unstarted |
-| #110| Sprint 05 - 04A1 (Deployment) | Jacob | ⏳ Unstarted |
+| #98 | Sprint 06 - 02B (Final Report) | Dave | ⏳ Done |
+| #95 | Sprint 05 - 02A1 (Final Merge) | Connor | ⏳ Done |
+| #96 | Sprint 05 - 02A2 (Reproducibility) | Connor | ⏳ Done |
+| #97 | Sprint 05 - 02A3 (Cleanup) | Connor | ⏳ Done |
+| #110| Sprint 05 - 04A1 (Deployment) | Jacob | ⏳ In Progress |
 
 
 
