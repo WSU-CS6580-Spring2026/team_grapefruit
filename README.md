@@ -50,6 +50,12 @@ Navigate to src directory in cmd then run:
 **Part 1 (Progress Sync / Testing Phase) due Mar 31, 2026**<br>
 **Part 2 (Final Due / Implementation Phase) due Apr 7, 2026**<br>
 
+### Sprint 6
+**Part 1 (Code Freeze & Final Polish ) due Apr 16, 2026**<br>
+**Part 2 (Final Report) due Apr 16, 2026**<br>
+**Part 3 (Final Presentation) due Apr 23, 2026**<br>
+**Part 4 (Deployment Challenge - OPTIONAL) due Apr 23, 2026**<br>
+
 ## Project Board
 We track all work using the GitHub Project Board:<br>
 ➡️[View Project Board](https://github.com/orgs/WSU-CS6580-Spring2026/projects/5)
@@ -58,8 +64,11 @@ We track all work using the GitHub Project Board:<br>
 
 | Issue | Description | Owner | Status |
 |------|-------------|-------|--------|
-| #84 | Sprint 05 - 02B (Refinement) | Dave, Jacob, Connor | ⏳ Planning |
-| #85 | Sprint 05 - 02C (Refactoring) | Dave, Jacob, Connor | ⏳ Unstarted |
+| #98 | Sprint 06 - 02B (Final Report) | Dave | ⏳ Done |
+| #95 | Sprint 05 - 02A1 (Final Merge) | Connor | ⏳ Done |
+| #96 | Sprint 05 - 02A2 (Reproducibility) | Connor | ⏳ Done |
+| #97 | Sprint 05 - 02A3 (Cleanup) | Connor | ⏳ Done |
+| #110| Sprint 05 - 04A1 (Deployment) | Jacob | ⏳ In Progress |
 
 
 
